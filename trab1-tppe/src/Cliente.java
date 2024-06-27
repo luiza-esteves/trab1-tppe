@@ -5,6 +5,7 @@ public class Cliente {
     private Tipo tipo;
     private Regiao regiao;
     private Endereco endereco;
+    private int cashback = 0;
 
     public Cliente(int id, String nome, Tipo tipo, Regiao regiao, Endereco endereco) {
         this.id = id;
@@ -53,6 +54,15 @@ public class Cliente {
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
+
+    public int getCashback() {
+        return cashback;
+    }
+
+    public void setCashback(int cashback) {
+        this.cashback = cashback;
+    }
+    
     
     
 }
