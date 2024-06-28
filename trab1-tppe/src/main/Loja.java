@@ -75,6 +75,24 @@ public class Loja {
         double desconto = cartaoLoja ? 0.2 : 0.1;
         return valor * desconto;
     }
+
+    public List<Double> calcularImposto(double valor, Regiao regiao) {
+        double icms = 0;
+        double municipal = 0;
+
+        if (regiao == Regiao.DistritoFederal) {
+            icms = valor * 0.18;
+            municipal = 0;
+        } else {
+            icms = valor * 0.12;
+            municipal = valor * 0.04;
+        }
+
+        List<Double> impostos = new ArrayList<>();
+        impostos.add(icms);
+        impostos.add(municipal);
+        return impostos;
+    }
     
     public List<Cliente> getClientes() {
         return clientes;
