@@ -1,3 +1,5 @@
+package tests;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,8 +11,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import main.Cliente;
+import main.Endereco;
+import main.Loja;
+import main.Regiao;
+import main.Tipo;
+
 @RunWith(Parameterized.class)
-public class LojaTest {
+public class adicionarClienteTest {
 
     private Loja loja;
     private String nomeCliente;
@@ -23,7 +31,7 @@ public class LojaTest {
         loja = new Loja();
     }
 
-    public LojaTest(String nomeCliente, Tipo tipoCliente, Regiao regiaoCliente, Endereco enderecoCliente) {
+    public adicionarClienteTest(String nomeCliente, Tipo tipoCliente, Regiao regiaoCliente, Endereco enderecoCliente) {
         this.nomeCliente = nomeCliente;
         this.tipoCliente = tipoCliente;
         this.regiaoCliente = regiaoCliente;
@@ -43,7 +51,7 @@ public class LojaTest {
 
 
     @Test
-    public void testeAdcionarCliente() {
+    public void testeAdicionarCliente() {
         loja.adicionarClientes(nomeCliente, tipoCliente, regiaoCliente, enderecoCliente);
 
         List<Cliente> clientes = loja.getClientes();
