@@ -16,24 +16,24 @@ import main.Regiao;
 import main.Tipo;
 
 @RunWith(Parameterized.class)
-public class calculosTeste {
+public class calculoFrete {
 
     private Loja loja;
     private Regiao regiao;
     private Endereco endereco;
     private Tipo tipo;
-    private double freteEsperado;
+    private double valorEsperado;
 
     @Before
     public void setup() {
         loja = new Loja();
     }
 
-    public calculosTeste(Regiao regiao, Endereco endereco, Tipo tipo, double freteEsperado) {
+    public calculoFrete(Regiao regiao, Endereco endereco, Tipo tipo, double valorEsperado, boolean cartaoLoja, double valorCompra) {
         this.regiao = regiao;
         this.endereco = endereco;
         this.tipo = tipo;
-        this.freteEsperado = freteEsperado;
+        this.valorEsperado = valorEsperado;
     }
 
     @Parameters
@@ -51,6 +51,6 @@ public class calculosTeste {
     public void testeCalcularFrete() {
         double frete = loja.calcularFrete(regiao, endereco, tipo);
 
-        assertEquals(frete, freteEsperado, 0.009);
+        assertEquals(frete, valorEsperado, 0.009);
     }
 }

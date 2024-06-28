@@ -66,6 +66,15 @@ public class Loja {
         }
         return numeroCartao.startsWith("429613");
     }
+
+    public double calcularDesconto(double valor, Tipo tipo, boolean cartaoLoja) {
+        if (tipo != Tipo.ESPECIAL) {
+            return 0.00;
+        }
+
+        double desconto = cartaoLoja ? 0.2 : 0.1;
+        return valor * desconto;
+    }
     
     public List<Cliente> getClientes() {
         return clientes;
