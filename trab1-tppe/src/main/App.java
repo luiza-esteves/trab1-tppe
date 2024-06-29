@@ -149,6 +149,22 @@ public class App {
                     for (Produto produto : produtosSelecionados) {
                         itensVendidos.add(new ItemVendido(produto.getId(), produto.getDescricao(), produto.getPreco() * 0.12, produto.getPreco() * 0.05));
                     }
+                    boolean usarCashback = false;
+                    if (cliente.getTipo() == Tipo.PRIME) {
+                        System.out.println("Deseja usar cashback? (1 - Sim / 2 - Não)");
+                        int opcaoCashback = scanner.nextInt();
+                        if (opcaoCashback == 1) {
+                            usarCashback = true;
+                        } else if (opcaoCashback != 2) {
+                            System.out.println("Opção inválida, não utilizará cashback.");
+                        }
+                    }
+
+                    if (usarCashback) {
+                        System.out.println("Utilizando cashback.");
+                    } else {
+                        System.out.println("Não utilizando cashback.");
+                    }
 
                     Venda venda = new Venda(new Date(), cliente.getId(), cliente.getNome(), itensVendidos.toArray(new ItemVendido[0]), formaPagamento.name(), valorTotal, desconto);
 
