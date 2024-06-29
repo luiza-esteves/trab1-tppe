@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class App {
-    private static int contadorIdCliente = 1;
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         Loja loja = new Loja();
@@ -19,11 +18,8 @@ public class App {
             int opcao = scanner.nextInt();
             scanner.nextLine();
 
-            if (opcao == 4) break;
-
             switch (opcao) {
                 case 1:
-                    int id = contadorIdCliente++;
                     System.out.print("Digite o nome: ");
                     String nome = scanner.nextLine();
 
@@ -102,8 +98,8 @@ public class App {
                         for (int i = 0; i < produtos.size(); i++) {
                             System.out.println(i + 1 + " - " + produtos.get(i).getDescricao());
                         }
+                        int produtoIndex;
                         System.out.print("Selecione o produto (0 para terminar): ");
-                        int produtoIndex = scanner.nextInt();
                         while (true) {
                             produtoIndex = scanner.nextInt();
                             if (produtoIndex == 0 || (produtoIndex > 0 && produtoIndex <= produtos.size())) {
@@ -128,7 +124,7 @@ public class App {
                     scanner.nextLine();
                     FormaPagamento formaPagamento = formasPagamento[pagamentoIndex - 1];
 
-                    String numeroCartao = null;
+                    String numeroCartao;
                     boolean cartaoLoja = false;
                     if (formaPagamento == FormaPagamento.CREDITO || formaPagamento == FormaPagamento.DEBITO) {
                         do {
@@ -172,10 +168,19 @@ public class App {
                     //calcular cashback
                     //verificar clientes especiais
                     break;
+                case 4:
+                    System.out.println("Encerrando o programa...");
+                    scanner.close(); // Fechar o scanner antes de sair
+                    System.exit(0); // Encerra o programa com código de saída 0 (sem erros)
+                default:
+                    System.out.println("Opção inválida. Digite novamente.");
+                    break;
             }
         }
 
-        scanner.close();
+
+
     }
+
 
 }
