@@ -29,7 +29,7 @@ public class calculoFrete {
         loja = new Loja();
     }
 
-    public calculoFrete(Regiao regiao, Endereco endereco, Tipo tipo, double valorEsperado, boolean cartaoLoja, double valorCompra) {
+    public calculoFrete(Regiao regiao, Endereco endereco, Tipo tipo, double valorEsperado) {
         this.regiao = regiao;
         this.endereco = endereco;
         this.tipo = tipo;
