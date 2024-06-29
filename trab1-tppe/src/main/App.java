@@ -152,7 +152,7 @@ public class App {
 
                     Venda venda = new Venda(new Date(), cliente.getId(), cliente.getNome(), itensVendidos.toArray(new ItemVendido[0]), formaPagamento.name(), valorTotal, desconto);
 
-                    System.out.println(venda);
+                    System.out.println("Valor total"+venda.getValorTotal());
                     //calcular cashback
                     //verificar clientes especiais
                     break;
@@ -162,7 +162,4 @@ public class App {
         scanner.close();
     }
 
-    public enum FormaPagamento {
-        DEBITO, CREDITO, DINHEIRO;
-    }
 }
