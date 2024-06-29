@@ -1,5 +1,6 @@
 package main;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,8 +8,7 @@ public class App {
     private static int contadorIdCliente = 1;
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
-        List<Cliente> clientes = new ArrayList<>();
-        List<Produto> produtos = new ArrayList<>();
+        Loja loja = new Loja();
 
         while (true) {
             System.out.println("Menu:");
@@ -50,14 +50,15 @@ public class App {
                     System.out.println("Endereços:");
                     Endereco[] enderecos = Endereco.values();
                     for (int i = 0; i < enderecos.length; i++) {
-                        System.out.println((i + 1) + " - " + tipos[i]);
+                        System.out.println((i + 1) + " - " + enderecos[i]);
                     }
                     System.out.print("Informe o número que identifica o tipo de endereço: ");
                     int tipoEndereco = scanner.nextInt();
                     scanner.nextLine();
                     Endereco endereco = enderecos[tipoEndereco - 1];
 
-                    clientes.add(new Cliente(id,nome, tipo, regiao, endereco)); //usar metodo de adicionar cliente da loja
+                    loja.adicionarClientes(nome, tipo, regiao, endereco);
+
                     break;
 
                 case 2:
@@ -71,29 +72,49 @@ public class App {
                     System.out.print("Digite a unidade: ");
                     String unidade = scanner.nextLine();
 
-                    produtos.add(new Produto(1,descricao, preco, unidade));//adicionar metodo da loja
+                    loja.adicionarProdutos(descricao, preco, unidade);
                     break;
 
                 case 3:
+                    List<Cliente> clientes = loja.getClientes();
                     System.out.println("Clientes:");
                     for (int i = 0; i < clientes.size(); i++) {
-                        System.out.println(i + 1 + " - " + clientes.get(i));
+                        System.out.println((i + 1) + " - " + clientes.get(i).getNome());
                     }
-                    System.out.print("Selecione o cliente: ");
-                    Cliente cliente = clientes.get(scanner.nextInt() - 1);
+                    int clienteIndex;
+                    while (true) {
+                        System.out.print("Selecione o cliente: ");
+                        clienteIndex = scanner.nextInt();
+                        if (clienteIndex > 0 && clienteIndex <= clientes.size()) {
+                            break;
+                        }
+                        System.out.println("Seleção inválida, tente novamente.");
+                    }
+                    Cliente cliente = clientes.get(clienteIndex - 1);
                     scanner.nextLine();
 
                     List<Produto> produtosSelecionados = new ArrayList<>();
+                    List<Produto> produtos = loja.getProdutos();
+                    double subtotal = 0.0;
                     while (true) {
                         //calcular valor total da compra
                         System.out.println("Produtos:");
                         for (int i = 0; i < produtos.size(); i++) {
-                            System.out.println(i + 1 + " - " + produtos.get(i));
+                            System.out.println(i + 1 + " - " + produtos.get(i).getDescricao());
                         }
                         System.out.print("Selecione o produto (0 para terminar): ");
                         int produtoIndex = scanner.nextInt();
+                        while (true) {
+                            produtoIndex = scanner.nextInt();
+                            if (produtoIndex == 0 || (produtoIndex > 0 && produtoIndex <= produtos.size())) {
+                                break;
+                            }
+                            System.out.println("Seleção inválida, tente novamente.");
+                        }
                         if (produtoIndex == 0) break;
+                        Produto produtoSelecionado = produtos.get(produtoIndex - 1);
                         produtosSelecionados.add(produtos.get(produtoIndex - 1));
+                        subtotal += produtoSelecionado.getPreco();
                         scanner.nextLine();
                     }
 
@@ -104,22 +125,33 @@ public class App {
                     }
                     System.out.print("Digite o número da forma de pagamento: ");
                     int pagamentoIndex = scanner.nextInt();
-                    scanner.nextLine(); // Consumir nova linha
+                    scanner.nextLine();
                     FormaPagamento formaPagamento = formasPagamento[pagamentoIndex - 1];
 
                     String numeroCartao = null;
-                    if (formaPagamento == FormaPagamento.CREDITO) { //usar metodo de verificação do numero
-                        System.out.print("Digite o número do cartão (16 dígitos): ");
-                        numeroCartao = scanner.nextLine();
-                    }//else pra retornar false
+                    boolean cartaoLoja = false;
+                    if (formaPagamento == FormaPagamento.CREDITO || formaPagamento == FormaPagamento.DEBITO) {
+                        do {
+                            System.out.print("Digite o número do cartão (16 dígitos): ");
+                            numeroCartao = scanner.nextLine();
+                        } while (numeroCartao.length() < 16);
+                        cartaoLoja = loja.verificarCartaoLoja(numeroCartao);
+                    }
 
-                    double frete = Loja.calcularFrete();
-                    double desconto = Loja.calcularDesconto();
-                    double imposto = Loja.calcularImposto();//fazer loop pra calcular pelos itens
-                    //verificar prime e cashback
+                    double frete = loja.calcularFrete(cliente.getRegiao(), cliente.getEndereco(), cliente.getTipo());
+                    double desconto = loja.calcularDesconto(subtotal, cliente.getTipo(), cartaoLoja);
+                    List<Double> impostos = loja.calcularImposto(subtotal, cliente.getRegiao());
 
+                    double valorTotal = subtotal + frete - desconto + impostos.stream().mapToDouble(Double::doubleValue).sum();
 
-                    Venda venda = new Venda(cliente, produtosSelecionados, formaPagamento, numeroCartao);
+                    // Criar lista de itens vendidos
+                    List<ItemVendido> itensVendidos = new ArrayList<>();
+                    for (Produto produto : produtosSelecionados) {
+                        itensVendidos.add(new ItemVendido(produto.getId(), produto.getDescricao(), produto.getPreco() * 0.12, produto.getPreco() * 0.05));
+                    }
+
+                    Venda venda = new Venda(new Date(), cliente.getId(), cliente.getNome(), itensVendidos.toArray(new ItemVendido[0]), formaPagamento.name(), valorTotal, desconto);
+
                     System.out.println(venda);
                     //calcular cashback
                     //verificar clientes especiais
@@ -128,5 +160,9 @@ public class App {
         }
 
         scanner.close();
+    }
+
+    public enum FormaPagamento {
+        DEBITO, CREDITO, DINHEIRO;
     }
 }
