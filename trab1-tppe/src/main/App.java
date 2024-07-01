@@ -143,7 +143,10 @@ public class App {
                     // Criar lista de itens vendidos
                     List<ItemVendido> itensVendidos = new ArrayList<>();
                     for (Produto produto : produtosSelecionados) {
-                        itensVendidos.add(new ItemVendido(produto.getId(), produto.getDescricao(), produto.getPreco() * 0.12, produto.getPreco() * 0.05));
+                        List<Double> impostosProduto = loja.calcularImposto(produto.getPreco(), cliente.getRegiao());
+                        double icms = impostosProduto.get(0);
+                        double municipal = impostosProduto.get(1);
+                        itensVendidos.add(new ItemVendido(produto.getId(), produto.getDescricao(), icms, municipal));
                     }
                     boolean usarCashback = false;
                     if (cliente.getTipo() == Tipo.PRIME) {
@@ -157,14 +160,21 @@ public class App {
                     }
 
                     if (usarCashback) {
+                        if (cliente.getCashback() > valorTotal) {
+                            cliente.setCashback(cliente.getCashback() - valorTotal);
+                            valorTotal = 0;
+                        } else {
+                            valorTotal = valorTotal - cliente.getCashback();
+                            cliente.setCashback(0);
+                        }
                         System.out.println("Utilizando cashback.");
                     } else {
                         System.out.println("Não utilizando cashback.");
                     }
 
-                    Venda venda = new Venda(new Date(), cliente.getId(), cliente.getNome(), itensVendidos.toArray(new ItemVendido[0]), formaPagamento.name(), valorTotal, desconto);
+                    Venda venda = new Venda(new Date(), cliente.getId(), cliente.getNome(), itensVendidos.toArray(new ItemVendido[0]), formaPagamento.name(), valorTotal, desconto, frete, impostos.stream().mapToDouble(Double::doubleValue).sum() );
+                    loja.adicionarVendas(venda);
 
-                    System.out.println("Valor total"+venda.getValorTotal());
                     //calcular cashback
                     //verificar clientes especiais
                     break;

@@ -1,14 +1,78 @@
 package main;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Loja {
     private List<Cliente> clientes;
     private List<Produto> produtos;
+    private List<Venda> vendas;
 
     public Loja() {
         this.clientes = new ArrayList<>();
         this.produtos = new ArrayList<>();
+        this.vendas = new ArrayList<>();
+    }
+
+    public void adicionarVendas(Venda venda) {
+        // TO-DO: imprimir nota fiscal na tela
+        System.out.println("Itens Vendidos:");
+        for (ItemVendido item : venda.getItensVendidos()) {
+            System.out.println("  Descrição: " + item.getDescricao());
+            System.out.println("  ICMS: " + item.getIcms());
+            System.out.println("  Municipal: " + item.getMunicipal());
+            System.out.println();
+        }
+        System.out.println("Data da Venda: " + venda.getDataVenda());
+        System.out.println("ID do Cliente: " + venda.getIdCliente());
+        System.out.println("Nome do Cliente: " + venda.getNomeCliente());
+        System.out.println("Método de Pagamento: " + venda.getMetodoPagamento());
+        System.out.println("Valor Total: " + venda.getValorTotal());
+        System.out.println("Desconto Total: " + venda.getDescontoTotal());
+        System.out.println("Frete: " + venda.getFreteTotal());
+        System.out.println("Imposto Total: " + venda.getImpostoTotal());
+        this.vendas.add(venda);
+    }
+
+    public void calcularCashback(int idCliente, boolean cartaoLoja, double valorTotal) {
+        Cliente cliente = this.getClientes().get(idCliente);
+
+        if (cliente.getTipo() == Tipo.PRIME) {
+            double taxa = cartaoLoja ? 0.05 : 0.03;
+            double cashback = valorTotal * taxa;
+            cliente.setCashback(cliente.getCashback() + cashback);
+        }
+    }
+
+    public void atualizarTiposDeClientes() {
+        LocalDate agora = LocalDate.now();
+        LocalDate primeiroDiaDoMesAtual = agora.withDayOfMonth(1);
+        LocalDate primeiroDiaDoUltimoMes = primeiroDiaDoMesAtual.minusMonths(1);
+        LocalDate ultimoDiaDoUltimoMes = primeiroDiaDoMesAtual.minusDays(1);
+
+        Date inicioUltimoMes = Date.from(primeiroDiaDoUltimoMes.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date fimUltimoMes = Date.from(ultimoDiaDoUltimoMes.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        for (Cliente cliente : clientes) {
+            if (cliente.getTipo() != Tipo.PRIME) {
+                double valorTotalUltimoMes = 0.0;
+                for (Venda venda : vendas) {
+                    if (venda.getIdCliente() == cliente.getId() &&
+                            !venda.getDataVenda().before(inicioUltimoMes) &&
+                            !venda.getDataVenda().after(fimUltimoMes)) {
+                        valorTotalUltimoMes += venda.getValorTotal();
+                    }
+                }
+                if (valorTotalUltimoMes >= 100.0 && cliente.getTipo() == Tipo.PADRAO) {
+                    cliente.setTipo(Tipo.ESPECIAL);
+                } else if (valorTotalUltimoMes < 100.0 && cliente.getTipo() == Tipo.ESPECIAL) {
+                    cliente.setTipo(Tipo.PADRAO);
+                }
+            }
+        }
     }
 
     public void adicionarProdutos(String descricao, double preco, String medida) {
@@ -16,7 +80,7 @@ public class Loja {
         Produto produto = new Produto(id, descricao, preco, medida);
         this.produtos.add(produto);
     }
-    
+
     public void adicionarClientes(String nome, Tipo tipo, Regiao regiao, Endereco endereco) {
         int id = this.clientes.size() + 1;
         Cliente cliente = new Cliente(id, nome, tipo, regiao, endereco);
@@ -93,12 +157,17 @@ public class Loja {
         impostos.add(municipal);
         return impostos;
     }
-    
+
     public List<Cliente> getClientes() {
         return clientes;
     }
-    
+
     public List<Produto> getProdutos() {
         return produtos;
     }
+
+    public List<Venda> getVendas() {
+        return vendas;
+    }
+
 }
