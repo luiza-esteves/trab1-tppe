@@ -175,8 +175,8 @@ public class App {
                     Venda venda = new Venda(new Date(), cliente.getId(), cliente.getNome(), itensVendidos.toArray(new ItemVendido[0]), formaPagamento.name(), valorTotal, desconto, frete, impostos.stream().mapToDouble(Double::doubleValue).sum() );
                     loja.adicionarVendas(venda);
 
-                    //calcular cashback
-                    //verificar clientes especiais
+                    loja.calcularCashback(clienteIndex-1,cartaoLoja,valorTotal);
+                    loja.atualizarTiposDeClientes();
                     break;
                 case 4:
                     System.out.println("Encerrando o programa...");
