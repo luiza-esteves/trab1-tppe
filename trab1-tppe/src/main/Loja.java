@@ -141,22 +141,9 @@ public class Loja {
     }
 
     public List<Double> calcularImposto(double valor, Regiao regiao) {
-        double icms = 0;
-        double municipal = 0;
-
-        if (regiao == Regiao.DistritoFederal) {
-            icms = valor * 0.18;
-            municipal = 0;
-        } else {
-            icms = valor * 0.12;
-            municipal = valor * 0.04;
-        }
-
-        List<Double> impostos = new ArrayList<>();
-        impostos.add(icms);
-        impostos.add(municipal);
-        return impostos;
-    }
+        CalculadoraImpostos calculadora = new CalculadoraImpostos(valor, regiao);
+        return calculadora.calcular();
+    }    
 
     public List<Cliente> getClientes() {
         return clientes;
