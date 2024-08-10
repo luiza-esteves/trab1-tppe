@@ -47,32 +47,17 @@ public class Loja {
         }
     }
 
+        /**
+     * Refatoração: Extração do método atualizarTiposDeClientes() para a classe AtualizaTipoCliente.
+     *
+     * Efeitos da Refatoração:
+     * 1. O método atualizarTiposDeClientes() na classe Loja agora chama a classe AtualizaTipoCliente
+     * 2. Esta refatoração foi realizada para melhorar a coesão do código, separando as responsabilidades
+     * 3. A mudança aumenta a modularidade e facilita a manutenção futura, permitindo que a lógica de atualização de tipos de clientes seja isolada e possa ser usada em outras classes
+     */
     public void atualizarTiposDeClientes() {
-        LocalDate agora = LocalDate.now();
-        LocalDate primeiroDiaDoMesAtual = agora.withDayOfMonth(1);
-        LocalDate primeiroDiaDoUltimoMes = primeiroDiaDoMesAtual.minusMonths(1);
-        LocalDate ultimoDiaDoUltimoMes = primeiroDiaDoMesAtual.minusDays(1);
-
-        Date inicioUltimoMes = Date.from(primeiroDiaDoUltimoMes.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date fimUltimoMes = Date.from(ultimoDiaDoUltimoMes.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-        for (Cliente cliente : clientes) {
-            if (cliente.getTipo() != Tipo.PRIME) {
-                double valorTotalUltimoMes = 0.0;
-                for (Venda venda : vendas) {
-                    if (venda.getIdCliente() == cliente.getId() &&
-                            !venda.getDataVenda().before(inicioUltimoMes) &&
-                            !venda.getDataVenda().after(fimUltimoMes)) {
-                        valorTotalUltimoMes += venda.getValorTotal();
-                    }
-                }
-                if (valorTotalUltimoMes >= 100.0 && cliente.getTipo() == Tipo.PADRAO) {
-                    cliente.setTipo(Tipo.ESPECIAL);
-                } else if (valorTotalUltimoMes < 100.0 && cliente.getTipo() == Tipo.ESPECIAL) {
-                    cliente.setTipo(Tipo.PADRAO);
-                }
-            }
-        }
+        AtualizaTipoCliente atualizador = new AtualizaTipoCliente(this.clientes, this.vendas);
+        atualizador.atualizarTiposDeClientes();
     }
 
     public void adicionarProdutos(String descricao, double preco, String medida) {
