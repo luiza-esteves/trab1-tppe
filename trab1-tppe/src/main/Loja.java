@@ -125,6 +125,13 @@ public class Loja {
         return valor * desconto;
     }
 
+    /**
+     * O método calcularImposto foi refatorado para utilizar o padrão objeto-método.
+     * Anteriormente, toda a lógica de cálculo de impostos estava contida neste método.
+     * Agora, essa lógica foi movida para a nova classe CalculadoraImpostos, o que melhora
+     * a separação de responsabilidades e a modularidade do código.
+     */
+
     public List<Double> calcularImposto(double valor, Regiao regiao) {
         CalculadoraImpostos calculadora = new CalculadoraImpostos(valor, regiao);
         return calculadora.calcular();
