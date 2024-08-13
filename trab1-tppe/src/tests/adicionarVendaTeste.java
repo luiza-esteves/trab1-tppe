@@ -70,9 +70,9 @@ public class adicionarVendaTeste {
         Venda vendaAnalisada = vendas.get(0);
         assertEquals(this.idCliente, vendaAnalisada.getIdCliente());
         assertEquals(this.nomeCliente, vendaAnalisada.getNomeCliente());
-        assertEquals(this.metodoPagamento, vendaAnalisada.getMetodoPagamento());
-        assertEquals(this.valorTotal, vendaAnalisada.getValorTotal(), 0.01);
-        assertEquals(this.descontoTotal, vendaAnalisada.getDescontoTotal(), 0.01);
+        assertEquals(this.metodoPagamento, vendaAnalisada.getNotaFiscal().getMetodoPagamento());
+        assertEquals(this.valorTotal, vendaAnalisada.getNotaFiscal().getValorTotal(), 0.01);
+        assertEquals(this.descontoTotal, vendaAnalisada.getNotaFiscal().getDescontoTotal(), 0.01);
     }
 
     @Test

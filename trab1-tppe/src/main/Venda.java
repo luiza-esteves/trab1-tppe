@@ -2,42 +2,30 @@ package main;
 
 import java.util.Date;
 
+/**
+ * A classe Venda estava fazendo o trabalho de duas classes, ficando muito longa e com vários atributos.
+ * Tudo isso estava dificultando a leibilidade e interpreção da classe.
+ * Como solução, foi criado uma nova classe e foi movido os campos e método relevantes da antiga classe para a nova.
+ * A classe nova se chama NotaFiscal e possui os atributos referentes ao pagamento, valor e descontos da compra.
+ * 
+ * Efeitos da refatoração:
+ * 1 - Maior facilidade de entendimento: Com a divisão das classes, fica mais fácil de entender a responsabilidade e atributos relevantes de cada uma das classes.
+ * 
+ * 2 - Diminuição de tamanho da classe: Classes menores e com menos métodos são mais fáceis de entender, assim dividir alguns atributos de Venda com a nova classe NotaFiscal fará com que a legibilidade dessas classes sejam maiores.
+ */
 public class Venda {
     private Date dataVenda;
     private int idCliente;
     private String nomeCliente;
     private ItemVendido[] itensVendidos;
-    private String metodoPagamento;
-    private double valorTotal;
-    private double descontoTotal;
-    private double freteTotal;
-    private double impostoTotal;
+    private NotaFiscal notaFiscal;
 
     public Venda(Date dataVenda, int idCliente, String nomeCliente, ItemVendido[] itensVendidos, String metodoPagamento, double valorTotal, double descontoTotal, double freteTotal, double impostoTotal) {
         this.dataVenda = dataVenda;
         this.idCliente = idCliente;
         this.nomeCliente = nomeCliente;
         this.itensVendidos = itensVendidos;
-        this.metodoPagamento = metodoPagamento;
-        this.valorTotal = valorTotal;
-        this.descontoTotal = descontoTotal;
-        this.impostoTotal = impostoTotal;
-    }
-
-    public double getFreteTotal() {
-        return freteTotal;
-    }
-
-    public void setFreteTotal(double freteTotal) {
-        this.freteTotal = freteTotal;
-    }
-
-    public double getImpostoTotal() {
-        return impostoTotal;
-    }
-
-    public void setImpostoTotal(double impostoTotal) {
-        this.impostoTotal = impostoTotal;
+        this.notaFiscal = new NotaFiscal(metodoPagamento, valorTotal, descontoTotal, freteTotal, impostoTotal);
     }
 
     public Date getDataVenda() {
@@ -72,27 +60,12 @@ public class Venda {
         this.itensVendidos = itensVendidos;
     }
 
-    public String getMetodoPagamento() {
-        return metodoPagamento;
+    public NotaFiscal getNotaFiscal() {
+        return notaFiscal;
     }
 
-    public void setMetodoPagamento(String metodoPagamento) {
-        this.metodoPagamento = metodoPagamento;
-    }
 
-    public double getValorTotal() {
-        return valorTotal;
-    }
-
-    public void setValorTotal(double valorTotal) {
-        this.valorTotal = valorTotal;
-    }
-
-    public double getDescontoTotal() {
-        return descontoTotal;
-    }
-
-    public void setDescontoTotal(double descontoTotal) {
-        this.descontoTotal = descontoTotal;
+    public void setNotaFiscal(NotaFiscal notaFiscal) {
+        this.notaFiscal = notaFiscal;
     }
 }

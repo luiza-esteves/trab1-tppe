@@ -29,11 +29,11 @@ public class Loja {
         System.out.println("Data da Venda: " + venda.getDataVenda());
         System.out.println("ID do Cliente: " + venda.getIdCliente());
         System.out.println("Nome do Cliente: " + venda.getNomeCliente());
-        System.out.println("Método de Pagamento: " + venda.getMetodoPagamento());
-        System.out.println("Valor Total: " + venda.getValorTotal());
-        System.out.println("Desconto Total: " + venda.getDescontoTotal());
-        System.out.println("Frete: " + venda.getFreteTotal());
-        System.out.println("Imposto Total: " + venda.getImpostoTotal());
+        System.out.println("Método de Pagamento: " + venda.getNotaFiscal().getMetodoPagamento());
+        System.out.println("Valor Total: " + venda.getNotaFiscal().getValorTotal());
+        System.out.println("Desconto Total: " + venda.getNotaFiscal().getDescontoTotal());
+        System.out.println("Frete: " + venda.getNotaFiscal().getFreteTotal());
+        System.out.println("Imposto Total: " + venda.getNotaFiscal().getImpostoTotal());
         this.vendas.add(venda);
     }
 

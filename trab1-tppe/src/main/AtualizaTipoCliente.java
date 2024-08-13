@@ -53,7 +53,7 @@ public class AtualizaTipoCliente {
             if (venda.getIdCliente() == cliente.getId() &&
                     !venda.getDataVenda().before(inicioUltimoMes) &&
                     !venda.getDataVenda().after(fimUltimoMes)) {
-                valorTotalUltimoMes += venda.getValorTotal();
+                valorTotalUltimoMes += venda.getNotaFiscal().getValorTotal();
             }
         }
         return valorTotalUltimoMes;
